@@ -21,6 +21,7 @@ public class Main {
  
     public void run() {
         System.out.println("Hello LWJGL " + Sys.getVersion() + "!");
+        
         try {
             init();
             loop();
@@ -90,8 +91,8 @@ public class Main {
         // LWJGL detects the context that is current in the current thread,
         // creates the ContextCapabilities instance and makes the OpenGL
         // bindings available for use.
-        GL.createCapabilities(); // valid for latest build
-        //GLContext.createFromCurrent(); // use this line instead with the 3.0.0a build
+        //GL.createCapabilities(); // valid for latest build
+        GLContext.createFromCurrent(); // use this line instead with the 3.0.0a build
  
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
