@@ -15,6 +15,11 @@ public class Main {
     // We need to strongly reference callback instances.
     private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback   keyCallback;
+    
+    PhysicsObject o = new PhysicsObject(100,100,10,10);
+    int ups = 60;
+    long updateTimer = 0;
+    long updateCooldown = (1/ups)*1000000000;
  
     // The window handle
     private long window;
@@ -50,8 +55,8 @@ public class Main {
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
  
-        int WIDTH = 300;
-        int HEIGHT = 300;
+        int WIDTH = 800;
+        int HEIGHT = 600;
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
@@ -83,6 +88,7 @@ public class Main {
  
         // Make the window visible
         glfwShowWindow(window);
+        
     }
  
     private void loop() {
@@ -93,21 +99,47 @@ public class Main {
         // bindings available for use.
         //GL.createCapabilities(); // valid for latest build
         GLContext.createFromCurrent(); // use this line instead with the 3.0.0a build
- 
+        
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0,800,0,600,1,-1);
+        glMatrixMode(GL_MODELVIEW);
+        
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
  
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( glfwWindowShouldClose(window) == GL_FALSE ) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
- 
-            glfwSwapBuffers(window); // swap the color buffers
- 
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
+        	
+        	render();
+        	if(updateTimer <= 0){
+        		update();
+        		updateTimer = updateCooldown;
+        	}else{
+        		updateTimer -= System.nanoTime();
+        	}
+            
         }
+        
+    }
+    
+    public void update(){
+    	o.update();
+    }
+    
+    public void render(){
+    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+        
+        glColor3f(1.0f, 0.0f, 0.0f);
+        
+       o.render();
+        
+        glfwSwapBuffers(window); // swap the color buffers
+
+        // Poll for window events. The key callback above will only be
+        // invoked during this call.
+        glfwPollEvents();
     }
  
     public static void main(String[] args) {
