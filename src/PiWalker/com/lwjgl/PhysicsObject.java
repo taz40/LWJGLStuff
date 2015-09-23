@@ -9,7 +9,7 @@ public class PhysicsObject {
 	float x, y, width, height;
 	int fps, ups;
 	float forceTimer = .1f;
-	float mass = 0.0585f;
+	float mass = 10;
 	float v=0;
 	long lastUpdate = System.nanoTime();
 	
@@ -30,20 +30,20 @@ public class PhysicsObject {
 	}
 	
 	public void update(){
-		float deltaTime = (System.nanoTime() - (float)(lastUpdate))/1000000000f;
-		lastUpdate = System.nanoTime();
+		float deltaTime = ((float)System.nanoTime() - (float)(lastUpdate))/1000000000f;
 		float gravityForce = -9.8f * mass;
 		float netForce = gravityForce;
 		if(forceTimer > 0){
-			netForce += 218;
+			netForce += 1000;
 			forceTimer -= deltaTime;
 		}
-		System.out.println(v);
-		float newY = ((netForce/(2*mass))*deltaTime*deltaTime)+(+v*deltaTime)+y;
-		float newV = ((netForce/mass)*deltaTime)+v;
+		float a = netForce/mass;
+		System.out.println(y);
+		float newY = ((a/2)*deltaTime*deltaTime)+(v*deltaTime)+y;
+		float newV = (a*deltaTime)+v;
 		y = newY;
 		v = newV;
-		
+		lastUpdate = System.nanoTime();
 	}
 	
 	
